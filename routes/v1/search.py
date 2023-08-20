@@ -23,7 +23,7 @@ async def search(
     page_size: int = 1,
     page_number: int = 0,
     model_release: bool = False,
-    propetry_release: bool = False,
+    property_release: bool = False,
 ) -> dict:
     _LOG.info(
         f"Request recieved for query {query}, ot: {orientation}, "
@@ -33,12 +33,13 @@ async def search(
     # Prepare query parameters
     params = {
         'qt': query,
-        'ot': orientation.get_query_string(),
         'lic': license.get_query_string(),
     }
+    if orientation != Orientation.ALL:
+        params['ot'] = orientation.get_query_string()
     if model_release:
         params['mr'] = "1"
-    if propetry_release:
+    if property_release:
         params['pr'] = "1"
 
     response = client.get(
