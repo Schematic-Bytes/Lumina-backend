@@ -38,8 +38,15 @@ async def search(
     )
     _LOG.info(f"Request for query {query} satisfied in {time.perf_counter()-start:.2f}s")
     if response.status_code >= 400:
-        _LOG.error(f"Request for query {query} failed :- {response.text}", exc_info=True, stack_info=True)
-        raise JSONResponse(status_code=status.HTTP_502_BAD_GATEWAY, content={"message": "something went wrong"})
+        _LOG.error(
+            f"Request for query {query} failed :- {response.text}",
+            exc_info=True,
+            stack_info=True,
+        )
+        raise JSONResponse(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            content={"message": "something went wrong"},
+        )
 
     result = await Result.from_xml_string(response.text)
 
