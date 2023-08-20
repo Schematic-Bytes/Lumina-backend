@@ -21,7 +21,7 @@ Lumina Backend is a backend server created using FastAPI, designed to serve as a
 Lumina Backend acts as an intermediary layer between your application and the Alamy API server. It streamlines the process of interacting with the Alamy API by providing advanced filtering, pagination capabilities, and an innovative reverse image lookup feature. Built with FastAPI, Lumina Backend offers high performance and reliability.
 Features
 
-- - *__Proxy Microservice__*: Lumina Backend efficiently handles communication with the Alamy API server on behalf of your application.
+- *__Proxy Microservice__*: Lumina Backend efficiently handles communication with the Alamy API server on behalf of your application.
 
 - *__User-Friendly Filtering__*: Easily apply filters to your image searches, making it simple to narrow down results based on keywords, categories, and more.
 
