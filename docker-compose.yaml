@@ -13,18 +13,18 @@ services:
           - app-python3.11-site-packages:/usr/local/lib/python3.11/site-packages
           - app-python3.11-usr-local-bin:/usr/local/bin
           - .:/application
-        # depends_on:
-        #   - redis
+        depends_on:
+          - redis
         ports:
           - "5000:5000"
         stdin_open: true
         tty: true
 
-    # redis:
-    #     image: redis:7.2.0
-    #     container_name: redis
-    #     ports:
-    #       - "6379:6379"
+    redis:
+        image: redis:7.2.0
+        container_name: redis
+        ports:
+          - "6379:6379"
 
 
 volumes:

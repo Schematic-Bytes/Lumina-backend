@@ -1,10 +1,13 @@
+import json
 import time
+from hashlib import sha256
 from typing import Optional
 
 from fastapi import status
 from fastapi.responses import JSONResponse
 from httpx import Client
 from pydantic.dataclasses import dataclasses
+from redis.asyncio import Redis
 
 from config import logging
 from models.license import License
@@ -12,6 +15,8 @@ from models.orientation import Orientation
 from models.result import Result
 
 client = Client(base_url="https://api.alamy.com")
+
+redis = Redis(host="redis", port=6379)
 
 _LOG = logging.getLogger("[search]")
 
@@ -29,6 +34,7 @@ async def search(
         f"Request recieved for query {query}, ot: {orientation}, "
         f"lic: {license}, ps: {page_size}, pn: {page_number}",
     )
+
     start = time.perf_counter()
     # Prepare query parameters
     params = {
@@ -41,6 +47,14 @@ async def search(
         params['mr'] = "1"
     if property_release:
         params['pr'] = "1"
+
+    hash_string = sha256(":".join(map(str, params.values())).encode('utf-8')).hexdigest()
+
+    result = await redis.get(hash_string)
+
+    if result:
+        print("cache hit")
+        return json.loads(result)
 
     response = client.get('/images/api/v2/search', params=params)
 
@@ -57,5 +71,8 @@ async def search(
         )
 
     result = await Result.from_xml_string(response.text)
+    data = dataclasses.asdict(result)
 
-    return dataclasses.asdict(result)
+    await redis.set(hash_string, json.dumps(data), ex=30)
+
+    return data
