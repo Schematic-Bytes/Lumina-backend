@@ -22,19 +22,27 @@ async def search(
     license: Optional[License] = License.EITHER,
     page_size: int = 1,
     page_number: int = 0,
+    model_release: bool = False,
+    propetry_release: bool = False,
 ) -> dict:
     _LOG.info(
         f"Request recieved for query {query}, ot: {orientation}, "
         f"lic: {license}, ps: {page_size}, pn: {page_number}",
     )
     start = time.perf_counter()
+    # Prepare query parameters
+    params = {
+        'qt': query,
+        'ot': orientation.get_query_string(),
+        'lic': license.get_query_string(),
+    }
+    if model_release:
+        params['mr'] = "1"
+    if propetry_release:
+        params['pr'] = "1"
+
     response = client.get(
         '/images/api/v2/search',
-        params={
-            'qt': query,
-            'ot': orientation.get_query_string(),
-            'lic': license.get_query_string(),
-        },
     )
     _LOG.info(f"Request for query {query} satisfied in {time.perf_counter()-start:.2f}s")
     if response.status_code >= 400:
