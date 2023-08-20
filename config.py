@@ -3,6 +3,7 @@ import logging
 
 class AppConfig:
     PORT = 5000
+    MODEL_FILE = "data/yolov8x.pt"
 
 
 logging.basicConfig(

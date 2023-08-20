@@ -3,3 +3,6 @@ redis
 uvloop
 uvicorn
 httpx
+python-multipart
+ultralytics
+Pillow
