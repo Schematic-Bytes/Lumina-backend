@@ -42,9 +42,8 @@ async def search(
     if property_release:
         params['pr'] = "1"
 
-    response = client.get(
-        '/images/api/v2/search',
-    )
+    response = client.get('/images/api/v2/search', params=params)
+
     _LOG.info(f"Request for query {query} satisfied in {time.perf_counter()-start:.2f}s")
     if response.status_code >= 400:
         _LOG.error(
